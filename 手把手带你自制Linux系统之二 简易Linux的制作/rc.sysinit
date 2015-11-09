@@ -1,0 +1,4 @@
+#!/bin/bash
+#
+echo -e "\tWelcome to \033[31mMy MiniLinux\033[0m."
+/bin/bash

@@ -1,0 +1,11 @@
+#!/bin/bash
+
+runlevel=$1
+
+for i in /etc/rc.d/rc$runlevel.d/K*; do
+    $i stop
+done
+
+for i in /etc/rc.d/rc$runlevel.d/S*; do
+    $i start
+done

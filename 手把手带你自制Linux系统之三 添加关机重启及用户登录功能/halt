@@ -1,0 +1,14 @@
+#!/bin/bash
+
+case $0 in
+    *halt)  
+    COMMAND="/sbin/halt -p"
+    ;;  
+    *reboot)  
+    COMMAND="/sbin/reboot"
+    ;;  
+    *)  
+    echo echo "$0: call me as 'halt' or 'reboot' please!"
+    ;;  
+esac
+exec $COMMAND
