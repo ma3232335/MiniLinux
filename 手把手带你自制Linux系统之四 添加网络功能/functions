@@ -1,0 +1,32 @@
+SCREEN=`stty -F /dev/console size 2>/dev/null`
+COLUMNS=${SCREEN#* }
+[ -z $COLUMNS ] && COLUMNS=80
+ 
+SPA_COL=$[$COLUMNS-14]
+ 
+RED='\033[31m'
+GREEN='\033[32m'
+YELLOW='\033[33m'
+BLUE='\033\34m'
+NORMAL='\033[0m'
+ 
+ 
+success() {
+  string=$1
+  RT_SPA=$[$SPA_COL-${#string}]
+  echo -n "$string"
+  for I in `seq 1 $RT_SPA`;do
+    echo -n " "
+  done
+  echo -e "[   ${GREEN}OK${NORMAL}   ]"
+}
+ 
+failure() {
+  string=$1
+  RT_SPA=$[$SPA_COL-${#string}]
+  echo -n "$string"
+  for I in `seq 1 $RT_SPA`;do
+    echo -n " "
+  done
+  echo -e "[ ${RED}FAILED${NORMAL} ]"
+}   

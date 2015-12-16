@@ -1,0 +1,11 @@
+#!/bin/bash
+
+. /etc/rc.d/init.d/functions
+
+echo -e "\tWelcome to \033[31mMy MiniLinux\033[0m."
+
+echo "Initializing network device..."
+/sbin/insmod /lib/modules/mii.ko
+/sbin/insmod /lib/modules/pcnet32.ko
+[ $? -eq 0 ] && success "Initializing newtork device" || failure "Initializing network device"
+

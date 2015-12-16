@@ -1,0 +1,50 @@
+#! /bin/bash
+#
+# network       Bring up/down networking
+#
+# chkconfig: 2345 10 90
+# description: Activates/Deactivates all network interfaces configured to \
+#              start at boot time.
+#
+
+prog=network
+. /etc/rc.d/init.d/functions
+
+CONF=/etc/sysconfig/network-scripts/ifcfg-eth0
+. $CONF
+NETMASK=24
+start(){
+    ifconfig eth0 $IPADDR/$NETMASK
+    [ -n $GATEWAY ] && route add default gw $GATEWAY
+}
+stop(){
+    ifconfig eth0 down
+}
+status(){
+    ifconfig eth0
+}
+usage(){
+    echo "Usage: $prog {start|stop|status|restart}"
+}
+case $1 in
+    start)
+    start
+    success "Config network eth0"
+    ;;
+    stop)
+    stop
+    success "Stop network card eth0"
+    ;;
+    restart)
+    stop
+    start
+    success "Restart network card eth0"
+    ;;
+    status)
+    status
+    ;;
+    *)
+    usage
+    exit 1
+    ;;
+esac
