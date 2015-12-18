@@ -9,3 +9,5 @@ echo "Initializing network device..."
 /sbin/insmod /lib/modules/pcnet32.ko
 [ $? -eq 0 ] && success "Initializing newtork device" || failure "Initializing network device"
 
+ifconfig lo 127.0.0.1/8
+[ $? -eq 0 ] && success "Activating loopback network device" failure "Activating loopback network device"
