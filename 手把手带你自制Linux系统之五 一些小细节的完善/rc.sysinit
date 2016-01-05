@@ -1,0 +1,38 @@
+#!/bin/bash
+
+. /etc/rc.d/init.d/functions
+
+echo -e "\tWelcome to \033[31mMy MiniLinux\033[0m."
+
+echo "Initializing network device..."
+/sbin/insmod /lib/modules/mii.ko
+/sbin/insmod /lib/modules/pcnet32.ko
+[ $? -eq 0 ] && success "Initializing newtork device" || failure "Initializing network device"
+
+ifconfig lo 127.0.0.1/8
+[ $? -eq 0 ] && success "Activating loopback network device" failure "Activating loopback network device"
+
+echo "Set the hostname..."
+[ -f /etc/sysconfig/network ] && . /etc/sysconfig/network
+[ -z $HOSTNAME -o "$HOSTNAME" == "(none)" ] && HOSTNAME=localhost
+/bin/hostname $HOSTNAME
+
+sysctl -p &>/dev/null
+[ $? -eq 0 ] && success "Set kernel parameter" || failure "Set kernel parameter"
+
+echo "Remount rootfs..."
+mount -n -o remount,rw /
+[ $? -eq 0 ] && success "Remount rootfs" || failure "Remount rootfs"
+
+echo "Mount other filesystem..."
+grep -E -v "\<swap|proc|sysfs\>" /etc/fstab | awk '{print $1}' | 
+while read LINE; 
+do 
+    awk '{print $1}' /proc/mounts | grep "^$LINE$" > /dev/null; 
+    if [ $? -ne 0 ]; then
+        echo "mount -o rw $LINE `grep "^$LINE\>" /etc/fstab | awk '{print $2}'`"
+        mount -o rw $LINE `grep "^$LINE\>" /etc/fstab | awk '{print $2}'`    
+    fi
+done  
+
+[ $? -eq 0 ] && success "Mount other filesystem" || failure "Mount other filesystem"
