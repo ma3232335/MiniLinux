@@ -1,0 +1,5 @@
+::sysinit:/etc/rc.d/rc.sysinit
+::respawn:/sbin/getty 9600 tty1
+::respawn:/sbin/getty 9600 tty2
+::shutdown:/bin/umount -a -r
+::ctrlaltdel:/sbin/reboot

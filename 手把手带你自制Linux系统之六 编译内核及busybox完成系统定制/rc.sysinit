@@ -1,0 +1,21 @@
+#!/bin/sh
+#
+echo -e "\tWelcome to \033[31mMy Mini Linux \033[0m"
+
+echo "Mount proc and sys..."
+mount -t proc proc /proc
+mount -t sysfs sysfs /sys
+
+echo "Remount the rootfs..."
+mount -t ext3 -o remount,rw /dev/hda2 /
+
+echo "Detect and export hardware infomation..."
+mdev -s
+
+echo "Mount the other filesystem..."
+mount -a
+
+echo "Set the hostname"
+[ -f /etc/hostname ] && . /etc/hostname
+[ -z "$HOSTNAME" -o "$HOSTNAME" == '(none)' ] && HOSTNAME = localhost
+hostname $HOSTNAME
